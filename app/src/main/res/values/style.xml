@@ -2,6 +2,6 @@
 <resources>
     <style name="localTextViewStyle" parent="Widget.MaterialComponents.TextView">
 
-        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Large</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Medium</item>
     </style>
 </resources>

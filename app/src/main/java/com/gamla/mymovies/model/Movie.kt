@@ -1,6 +1,10 @@
 package com.gamla.mymovies.model
 
-data class MovieDB(
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
+
+@Parcelize
+data class Movie(
     val adult: Boolean,
     val backdrop_path: String,
     val genre_ids: List<Int>,
@@ -15,4 +19,4 @@ data class MovieDB(
     val video: Boolean,
     val vote_average: Double,
     val vote_count: Int
-)
+): Parcelable
