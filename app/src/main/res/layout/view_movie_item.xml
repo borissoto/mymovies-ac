@@ -20,5 +20,6 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:padding="26dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
         tools:text="Movie Title" />
 </LinearLayout>

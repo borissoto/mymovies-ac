@@ -2,10 +2,15 @@ package com.gamla.mymovies
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.TextView
 import android.widget.Toast
+import androidx.lifecycle.lifecycleScope
 import com.gamla.mymovies.databinding.ActivityMainBinding
 import com.gamla.mymovies.model.MovieDbClient
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlin.concurrent.thread
 
 class MainActivity : AppCompatActivity() {
@@ -14,21 +19,16 @@ class MainActivity : AppCompatActivity() {
         val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.recycler.adapter = MoviesAdapter(
-            listOf(
-                Movie("Titulo1", "https://loremflickr.com/320/240?lock=1"),
-                Movie("Titulo2", "https://loremflickr.com/320/240?lock=2"),
-                Movie("Titulo3", "https://loremflickr.com/320/240?lock=3"),
-                Movie("Titulo4", "https://loremflickr.com/320/240?lock=4"),
-                Movie("Titulo5", "https://loremflickr.com/320/240?lock=5"),
-                Movie("Titulo6", "https://loremflickr.com/320/240?lock=6"),
-            )
-        ) { movie ->
+        val moviesAdapter = MoviesAdapter(emptyList()) { movie ->
             Toast.makeText(this@MainActivity, movie.title, Toast.LENGTH_LONG).show()
         }
+        binding.recycler.adapter = moviesAdapter
 
-        thread {
-            MovieDbClient.service.listPopularMovies()
+        lifecycleScope.launch {
+            val apiKey = getString(R.string.api_key)
+            val popularMovies = MovieDbClient.service.listPopularMovies(apiKey)
+            moviesAdapter.movies = popularMovies.results
+            moviesAdapter.notifyDataSetChanged()
         }
     }
 }
