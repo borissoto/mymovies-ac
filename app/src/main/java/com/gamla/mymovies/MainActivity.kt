@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.widget.TextView
 import android.widget.Toast
 import com.gamla.mymovies.databinding.ActivityMainBinding
+import com.gamla.mymovies.model.MovieDbClient
+import kotlin.concurrent.thread
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -23,6 +25,10 @@ class MainActivity : AppCompatActivity() {
             )
         ) { movie ->
             Toast.makeText(this@MainActivity, movie.title, Toast.LENGTH_LONG).show()
+        }
+
+        thread {
+            MovieDbClient.service.listPopularMovies()
         }
     }
 }
