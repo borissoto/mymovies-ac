@@ -1,17 +1,13 @@
 package com.gamla.mymovies
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import android.widget.TextView
-import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import com.gamla.mymovies.databinding.ActivityMainBinding
+import com.gamla.mymovies.model.Movie
 import com.gamla.mymovies.model.MovieDbClient
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import kotlin.concurrent.thread
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -19,8 +15,8 @@ class MainActivity : AppCompatActivity() {
         val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val moviesAdapter = MoviesAdapter(emptyList()) { movie ->
-            Toast.makeText(this@MainActivity, movie.title, Toast.LENGTH_LONG).show()
+        val moviesAdapter = MoviesAdapter(emptyList()) {
+            navigateTo(it)
         }
         binding.recycler.adapter = moviesAdapter
 
@@ -30,5 +26,11 @@ class MainActivity : AppCompatActivity() {
             moviesAdapter.movies = popularMovies.results
             moviesAdapter.notifyDataSetChanged()
         }
+    }
+
+    private fun navigateTo(movie: Movie) {
+        val intent = Intent(this, DetailActivity::class.java)
+        intent.putExtra(DetailActivity.EXTRA_MOVIE, movie)
+        startActivity(intent)
     }
 }
