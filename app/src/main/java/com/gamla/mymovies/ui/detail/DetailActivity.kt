@@ -2,10 +2,12 @@ package com.gamla.mymovies.ui.detail
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.SpannableStringBuilder
 import android.widget.TextView
 import androidx.core.text.bold
 import androidx.core.text.buildSpannedString
 import com.bumptech.glide.Glide
+import com.gamla.mymovies.R
 import com.gamla.mymovies.databinding.ActivityDetailBinding
 import com.gamla.mymovies.model.Movie
 
@@ -35,20 +37,19 @@ class DetailActivity : AppCompatActivity() {
 
     private fun bindDetailInfo(detailInfo: TextView, movie: Movie) {
         detailInfo.text = buildSpannedString {
-            bold { append("Original language: ") }
-            appendLine(movie.original_language)
-
-            bold { append("Original title: ") }
-            appendLine(movie.original_title)
-
-            bold { append("Release date: ") }
-            appendLine(movie.release_date)
-
-            bold { append("Popularity: ") }
-            appendLine(movie.popularity.toString())
-
-            bold { append("Vote average: ") }
-            appendLine(movie.vote_average.toString())
+            appendInfo(R.string.original_language, movie.original_language)
+            appendInfo(R.string.original_title, movie.original_title)
+            appendInfo(R.string.release_date, movie.release_date)
+            appendInfo(R.string.popularity, movie.popularity.toString())
+            appendInfo(R.string.vote_average, movie.vote_average.toString())
         }
+    }
+
+    private fun SpannableStringBuilder.appendInfo(stringRes: Int, value: String){
+        bold {
+            append(getString(stringRes))
+            append(": ")
+        }
+        appendLine(value)
     }
 }
