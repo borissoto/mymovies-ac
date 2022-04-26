@@ -1,12 +1,14 @@
-package com.gamla.mymovies
+package com.gamla.mymovies.ui.main
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.lifecycle.lifecycleScope
+import com.gamla.mymovies.R
 import com.gamla.mymovies.databinding.ActivityMainBinding
 import com.gamla.mymovies.model.Movie
 import com.gamla.mymovies.model.MovieDbClient
+import com.gamla.mymovies.ui.detail.DetailActivity
 import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {

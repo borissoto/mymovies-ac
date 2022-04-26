@@ -1,4 +1,4 @@
-package com.gamla.mymovies
+package com.gamla.mymovies.ui.main
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
