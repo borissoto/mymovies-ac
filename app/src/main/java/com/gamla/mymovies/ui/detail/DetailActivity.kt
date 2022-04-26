@@ -1,4 +1,4 @@
-package com.gamla.mymovies
+package com.gamla.mymovies.ui.detail
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
