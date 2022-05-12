@@ -37,7 +37,7 @@ class MainActivity : AppCompatActivity() {
         binding.recycler.adapter = moviesAdapter
 
         lifecycleScope.launch {
-            moviesAdapter.movies = moviesRepository.findPopularMovies().results
+            moviesAdapter.submitList(moviesRepository.findPopularMovies().results)
         }
     }
 
