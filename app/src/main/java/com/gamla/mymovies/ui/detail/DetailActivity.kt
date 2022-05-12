@@ -1,5 +1,6 @@
 package com.gamla.mymovies.ui.detail
 
+import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.SpannableStringBuilder
@@ -12,51 +13,35 @@ import com.gamla.mymovies.databinding.ActivityDetailBinding
 import com.gamla.mymovies.model.Movie
 import com.gamla.mymovies.ui.common.loadUrl
 
+
 class DetailActivity : AppCompatActivity() {
 
     companion object {
         const val MOVIE = "DetailActivity:movie"
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val binding = ActivityDetailBinding.inflate(layoutInflater)
-        setContentView(binding.root)
 
-        setSupportActionBar(binding.movieDetailToolbar)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        ActivityDetailBinding.inflate(layoutInflater).run {
+            setContentView(root)
+            setSupportActionBar(movieDetailToolbar)
+            supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        val movie = intent.getParcelableExtra<Movie>(MOVIE)
+            val movie = intent.getParcelableExtra<Movie>(MOVIE) ?: throw IllegalStateException()
 
-        if (movie != null) {
-            binding.movieDetailToolbar.title = movie.title
+            movieDetailToolbar.title = movie.title
 
             val background = movie.backdropPath ?: movie.posterPath
-
-            binding.movieDetailImage.loadUrl("https://image.tmdb.org/t/p/w780/${background}")
-            binding.movieDetailSummary.text = movie.overview
-            bindDetailInfo(binding.movieDetailInfo, movie)
-            binding.fab.setOnClickListener{
+            movieDetailImage.loadUrl("https://image.tmdb.org/t/p/w780/${background}")
+            movieDetailSummary.text = movie.overview
+            movieDetailInfo.setMovie(movie)
+            fab.setOnClickListener {
 
             }
+
         }
     }
 
-    private fun bindDetailInfo(detailInfo: TextView, movie: Movie) {
-        detailInfo.text = buildSpannedString {
-            appendInfo(R.string.original_language, movie.originalLanguage)
-            appendInfo(R.string.original_title, movie.originalTitle)
-            appendInfo(R.string.release_date, movie.releaseDate)
-            appendInfo(R.string.popularity, movie.popularity.toString())
-            appendInfo(R.string.vote_average, movie.voteAveraqe.toString())
-        }
-    }
-
-    private fun SpannableStringBuilder.appendInfo(stringRes: Int, value: String){
-        bold {
-            append(getString(stringRes))
-            append(": ")
-        }
-        appendLine(value)
-    }
 }
