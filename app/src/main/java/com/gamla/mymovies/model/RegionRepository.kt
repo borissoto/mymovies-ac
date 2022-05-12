@@ -18,8 +18,9 @@ class RegionRepository(activity: AppCompatActivity) {
         private const val DEFAULT_REGION = "US"
     }
 
-    private val fusedLocationClient = LocationServices.getFusedLocationProviderClient(activity)
-    private val coarsePermissionChecker = PermissionChecker(
+    private val locationDataSource: LocationDataSource = PlayServicesLocationDataSource(activity)
+
+   private val coarsePermissionChecker = PermissionChecker(
         activity,
         Manifest.permission.ACCESS_COARSE_LOCATION
     )
@@ -30,17 +31,8 @@ class RegionRepository(activity: AppCompatActivity) {
 
     private suspend fun findLastLocation(): Location? {
         val success = coarsePermissionChecker.request()
-        return if (success) lastLocationSuspended() else null
+        return if (success) locationDataSource.findLastLocation() else null
     }
-
-    @SuppressLint("MissingPermission")
-    private suspend fun lastLocationSuspended(): Location? =
-        suspendCancellableCoroutine { continuation ->
-            fusedLocationClient.lastLocation
-                .addOnCompleteListener {
-                    continuation.resume(it.result)
-                }
-        }
 
     fun Location?.toRegion(): String {
         val adresses = this?.let {
