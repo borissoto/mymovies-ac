@@ -7,7 +7,9 @@ import android.location.Geocoder
 import android.location.Location
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import com.gamla.mymovies.R
 import com.gamla.mymovies.databinding.ActivityMainBinding
@@ -21,27 +23,39 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), MainPresenter.View {
 
-    private val moviesRepository by lazy { MoviesRepository(this) }
-
-    private val moviesAdapter = MoviesAdapter {
-        navigateTo(it)
-    }
+    private val presenter by lazy { MainPresenter(MoviesRepository(this), lifecycleScope) }
+    private val moviesAdapter = MoviesAdapter { presenter.onMovieClicked(it) }
+    private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val binding = ActivityMainBinding.inflate(layoutInflater)
+        binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         binding.recycler.adapter = moviesAdapter
-
-        lifecycleScope.launch {
-            moviesAdapter.submitList(moviesRepository.findPopularMovies().results)
-        }
+        presenter.onCreate(this)
     }
 
-    private fun navigateTo(movie: Movie) {
+    override fun onDestroy() {
+        presenter.onDestroy()
+        super.onDestroy()
+    }
+
+    override fun showProgress() {
+        binding.progressBar.visibility = View.VISIBLE
+    }
+
+    override fun updateData(movies: List<Movie>) {
+        moviesAdapter.submitList(movies)
+    }
+
+    override fun hideProgress() {
+        binding.progressBar.visibility = View.GONE
+    }
+
+    override fun navigateTo(movie: Movie) {
         val intent = Intent(this, DetailActivity::class.java)
         intent.putExtra(DetailActivity.MOVIE, movie)
         startActivity(intent)
