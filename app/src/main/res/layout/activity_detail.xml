@@ -32,7 +32,8 @@
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/movie_detail_toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize" />
+                android:layout_height="?attr/actionBarSize"
+                app:title="Movie Name"/>
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
@@ -47,15 +48,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:transitionGroup="true">
 
             <TextView
                 android:id="@+id/movie_detail_summary"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
+                android:padding="16dp"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                tools:text="@tools:sample/lorem/random" />
+                tools:text="Lorem ipsim" />
 
             <com.gamla.mymovies.ui.detail.MovieDetailInfoView
                 android:id="@+id/movie_detail_info"
@@ -64,7 +65,7 @@
                 android:padding="16dp"
                 android:lineSpacingMultiplier="1.5"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:background="?attr/colorSurface"
+                android:background="?attr/colorAccent"
                 tools:text="Detail Info" />
         </LinearLayout>
 

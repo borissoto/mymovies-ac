@@ -14,7 +14,10 @@ import com.gamla.mymovies.model.Movie
 import com.gamla.mymovies.ui.common.loadUrl
 
 
-class DetailActivity : AppCompatActivity() {
+class DetailActivity : AppCompatActivity(), DetailPresenter.View {
+
+    private val presenter = DetailPresenter()
+    private lateinit var binding: ActivityDetailBinding
 
     companion object {
         const val MOVIE = "DetailActivity:movie"
@@ -24,24 +27,28 @@ class DetailActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        ActivityDetailBinding.inflate(layoutInflater).run {
-            setContentView(root)
-            setSupportActionBar(movieDetailToolbar)
-            supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        binding = ActivityDetailBinding.inflate(layoutInflater)
+            setContentView(binding.root)
 
-            val movie = intent.getParcelableExtra<Movie>(MOVIE) ?: throw IllegalStateException()
-
-            movieDetailToolbar.title = movie.title
-
-            val background = movie.backdropPath ?: movie.posterPath
-            movieDetailImage.loadUrl("https://image.tmdb.org/t/p/w780/${background}")
-            movieDetailSummary.text = movie.overview
-            movieDetailInfo.setMovie(movie)
-            fab.setOnClickListener {
-
-            }
-
-        }
+            val movie: Movie = requireNotNull(intent.getParcelableExtra(MOVIE))
+            presenter.onCreate(this, movie)
     }
 
+    override fun onDestroy() {
+        presenter.onDestroy()
+        super.onDestroy()
+    }
+
+    override fun updateUI(movie: Movie) = with(binding) {
+        setSupportActionBar(binding.movieDetailToolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        movieDetailToolbar.title = movie.title
+
+        val background = movie.backdropPath ?: movie.posterPath
+        movieDetailImage.loadUrl("https://image.tmdb.org/t/p/w780/${background}")
+        movieDetailSummary.text = movie.overview
+        movieDetailInfo.setMovie(movie)
+        fab.setOnClickListener {
+        }
+    }
 }
