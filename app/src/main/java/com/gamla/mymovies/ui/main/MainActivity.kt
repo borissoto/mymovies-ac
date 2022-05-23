@@ -4,11 +4,16 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.gamla.mymovies.databinding.ActivityMainBinding
 import com.gamla.mymovies.model.Movie
 import com.gamla.mymovies.model.MoviesRepository
 import com.gamla.mymovies.ui.common.visible
 import com.gamla.mymovies.ui.detail.DetailActivity
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
@@ -24,7 +29,11 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         binding.recycler.adapter = moviesAdapter
 
-        viewModel.state.observe(this, ::updateUi)
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.state.collect(::updateUi)
+            }
+        }
     }
 
     private fun updateUi(state: MainViewModel.UiState) {
